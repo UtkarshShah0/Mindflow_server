@@ -2,3 +2,4 @@ fastapi==0.101.1
 mindsdb_sdk==1.0.5
 python-dotenv==0.21.1
 Requests==2.31.0
+uvicorn==0.23.2
