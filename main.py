@@ -20,9 +20,14 @@ app = FastAPI()
 #     "http://localhost:8000",
 #     "chrome-extension://pgigegiebniooimfefalcnmnkhlndmcb"  # Add your extension's origin
 # ]
+origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*']
+    allow_origins=origins,
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 # app.add_middleware(
 #     CORSMiddleware,
