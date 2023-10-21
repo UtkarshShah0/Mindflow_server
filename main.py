@@ -1,5 +1,6 @@
 import os
 import requests
+import re
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
@@ -20,6 +21,7 @@ app = FastAPI()
 #     "http://localhost:8000",
 #     "chrome-extension://pgigegiebniooimfefalcnmnkhlndmcb"  # Add your extension's origin
 # ]
+
 origins = ["*"]
 
 app.add_middleware(
@@ -82,3 +84,36 @@ async def image(request: Request):
                     f'SELECT response from mindsdb.gpt_image_3 WHERE input = {input} AND output = {output};'})
     
     return (resp.json()["data"][0][0])
+
+
+@app.post("/web")
+async def summary(request: Request):
+    form_data = await request.json()
+
+    input = form_data["question"]
+    question = f'"{input}"'
+
+    context = form_data["context"]
+    url  = f'"{context}"'
+
+    # url = '"https://docs.mindsdb.com/what-is-mindsdb"'
+    resp_4 = session.post('https://cloud.mindsdb.com/api/sql/query', json={'query':
+                    f'SELECT text_content FROM my_web.crawler WHERE url = {url} LIMIT 1;'})
+
+    s = (resp_4.json()["data"][0][0])
+    a = re.sub(r"\s+", "", s)
+    b = a[:1500]
+
+    print("**"*10)
+    print(b)
+    # question = '"what is mindsdb"'
+    data = f'"{b}"'
+
+    resp_5 = session.post('https://cloud.mindsdb.com/api/sql/query', json={'query':
+                        f'SELECT * FROM que WHERE question = {question} AND text = {data} ;'})
+
+
+    print(resp_5.json()["data"][0][0])
+
+    return (resp_5.json()["data"][0][0])
+
