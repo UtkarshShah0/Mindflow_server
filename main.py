@@ -77,11 +77,11 @@ async def image(request: Request):
     base = form_data["base"]
     input = f'"{base}"'
 
-    extra = form_data["extra"]
-    output = f'"{extra}"'
+    # extra = form_data["extra"]
+    # output = f'"{extra}"'
 
     resp = session.post('https://cloud.mindsdb.com/api/sql/query', json={'query':
-                    f'SELECT response from mindsdb.gpt_image_3 WHERE input = {input} AND output = {output};'})
+                    f'SELECT response from mindsdb.gpt_image_3 WHERE input = {input};'})
     
     return (resp.json()["data"][0][0])
 
@@ -116,4 +116,5 @@ async def summary(request: Request):
     print(resp_5.json()["data"][0][0])
 
     return (resp_5.json()["data"][0][0])
+
 
